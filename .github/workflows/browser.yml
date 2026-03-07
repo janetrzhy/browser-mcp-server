@@ -1,0 +1,49 @@
+name: Browser MCP Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  browser-server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps
+
+      - name: Install cloudflared
+        run: |
+          wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+          chmod +x cloudflared-linux-amd64
+
+      - name: Start MCP Server + Tunnel
+        run: |
+          # 启动MCP Server
+          python server.py &
+          sleep 5
+          
+          # 启动Cloudflare Tunnel
+          ./cloudflared-linux-amd64 tunnel --url http://localhost:3001 2>&1 | tee tunnel.log &
+          sleep 10
+          
+          # 打印隧道URL
+          echo "============================================"
+          echo "🔗 TUNNEL URL:"
+          grep -o 'https://[^ ]*\.trycloudflare\.com' tunnel.log || echo "等待隧道..."
+          echo "============================================"
+          echo "RikkaHub填入: 上面的URL + /sse"
+          echo "============================================"
+          
+          # 保持运行（最长6小时）
+          sleep 21000
