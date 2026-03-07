@@ -94,4 +94,4 @@ async def get_links() -> str:
     return result or "未找到链接"
 
 if __name__ == "__main__":
-    mcp.run(transport="sse")
+    mcp.run(transport="streamable-http")
