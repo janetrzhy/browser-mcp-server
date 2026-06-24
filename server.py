@@ -1,5 +1,5 @@
 """
-Browser MCP Server — "S的眼睛" (S's Eyes)
+Browser MCP Server
 
 A Model Context Protocol (MCP) server that bridges AI assistants with a headless
 Chromium browser, enabling autonomous web browsing, screenshot capture,
@@ -28,13 +28,13 @@ async def get_page() -> Page:
             args=["--window-size=1280,800", "--no-sandbox"],
         )
         context = await browser.new_context(
-            viewport={"width": 1280, "height": 800}, locale="zh-CN"
+            viewport={"width": 1280, "height": 800}, locale="en-US"
         )
         page = await context.new_page()
     return page
 
 
-mcp = FastMCP("S的眼睛", host="0.0.0.0", port=3001)
+mcp = FastMCP("Browser MCP Server", host="0.0.0.0", port=3001)
 
 
 @mcp.tool()

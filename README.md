@@ -7,8 +7,6 @@
 
 **An MCP server that gives AI assistants eyes on the web.** This project implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) to bridge AI language models (like Claude, GPT, etc.) with a headless Chromium browser, enabling autonomous web interaction — navigating, clicking, typing, scrolling, and extracting content.
 
-> "眼睛" (Yǎnjīng) means "eyes" in Chinese — because that's exactly what this gives an AI.
-
 ---
 
 ## Features
@@ -79,7 +77,7 @@ Example MCP client configuration:
 ```json
 {
   "mcpServers": {
-    "眼睛": {
+    "browser": {
       "url": "http://localhost:3001/sse"
     }
   }
