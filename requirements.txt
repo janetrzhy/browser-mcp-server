@@ -1,2 +1,2 @@
-mcp[cli]
-playwright
+mcp[cli]>=1.0.0
+playwright>=1.40.0

@@ -6,7 +6,7 @@ on:
 jobs:
   browser-server:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 360  # Max 6-hour session
 
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +14,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -29,21 +29,21 @@ jobs:
 
       - name: Start MCP Server + Tunnel
         run: |
-          # 启动MCP Server
+          # Start the MCP server in the background
           python server.py &
           sleep 5
-          
-          # 启动Cloudflare Tunnel
+
+          # Launch a Cloudflare Tunnel to expose the local server
           ./cloudflared-linux-amd64 tunnel --url http://localhost:3001 2>&1 | tee tunnel.log &
           sleep 10
-          
-          # 打印隧道URL
+
+          # Print the tunnel URL for the MCP client to connect
           echo "============================================"
           echo "🔗 TUNNEL URL:"
-          grep -o 'https://[^ ]*\.trycloudflare\.com' tunnel.log || echo "等待隧道..."
+          grep -o 'https://[^ ]*\.trycloudflare\.com' tunnel.log || echo "Waiting for tunnel..."
           echo "============================================"
-          echo "RikkaHub填入: 上面的URL + /sse"
+          echo "Append /sse to the URL for MCP client configuration"
           echo "============================================"
-          
-          # 保持运行（最长6小时）
+
+          # Keep the runner alive (up to the 6-hour timeout)
           sleep 21000
